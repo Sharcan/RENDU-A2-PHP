@@ -2,11 +2,20 @@
 require __DIR__ . "/vendor/autoload.php";
 
 ## ETAPE 0
-
 ## CONNECTEZ VOUS A VOTRE BASE DE DONNEE
 
-### ETAPE 1
+try
+{
+    $pdo = new PDO('mysql:host=localhost;dbname=semaine_php;charset=utf8', 'root', '');
+}
+catch (Exception $e)
+{
+        die('Erreur : ' . $e->getMessage());
+}
 
+
+
+### ETAPE 1
 ####CREE UNE BASE DE DONNEE AVEC UNE TABLE PERSONNAGE, UNE TABLE TYPE
 /*
  * personnages
@@ -32,6 +41,8 @@ require __DIR__ . "/vendor/autoload.php";
 # une ligne avec comme name = feu
 # une ligne avec comme name = eau
 
+//INSERT INTO `types` (`name`) VALUES ('feu'), ('eau');
+
 
 #######################
 ## ETAPE 3
@@ -39,14 +50,42 @@ require __DIR__ . "/vendor/autoload.php";
 # AFFICHER DANS LE SELECTEUR (<select name="" id="">) tout les types qui sont disponible (cad tout les type contenu dans la table types)
 
 
+
 #######################
 ## ETAPE 4
 
 # ENREGISTRER EN BASE DE DONNEE LE PERSONNAGE, AVEC LE BON TYPE ASSOCIER
 
+if(!empty($_POST)){
+
+   
+    $name = $_POST['Nom'];
+    $atk = $_POST['Atk'];
+    $pv = $_POST['Pv'];
+    $type_id = $_POST['type'];
+
+    $insertPerso = $pdo->prepare('INSERT INTO personnages (name, atk, pv, type_id) VALUES (:name, :atk, :pv, :type_id)');
+    $insertPerso->execute([
+        "name" => $name,
+        "atk" => $atk,
+        "pv" => $pv,
+        "type_id" => $type_id
+    ]);
+
+
+        
+    $msgInfo = $pdo -> prepare('SELECT name FROM personnages WHERE name = ?');
+    $msgInfo -> execute([$name]);
+    if($creer = $msgInfo->fetch()){
+        echo "PERSONNAGE $name CREER";
+    }
+}
+
 #######################
 ## ETAPE 5
 # AFFICHER LE MSG "PERSONNAGE ($name) CREER"
+
+//VOIR EN BAS DU CODE HTLM (ligne 147)
 
 #######################
 ## ETAPE 6
@@ -78,21 +117,31 @@ require __DIR__ . "/vendor/autoload.php";
     <form action="" method="POST" class="form-group">
         <div class="form-group col-md-4">
             <label for="">Nom du personnage</label>
-            <input type="text" class="form-control" placeholder="Nom">
+            <input type="text" class="form-control" placeholder="Nom" name="Nom">
         </div>
 
         <div class="form-group col-md-4">
             <label for="">Attaque du personnage</label>
-            <input type="text" class="form-control" placeholder="Atk">
+            <input type="text" class="form-control" placeholder="Atk" name="Atk">
         </div>
         <div class="form-group col-md-4">
             <label for="">Pv du personnage</label>
-            <input type="text" class="form-control" placeholder="Pv">
+            <input type="text" class="form-control" placeholder="Pv" name="Pv">
         </div>
         <div class="form-group col-md-4">
             <label for="">Type</label>
-            <select name="" id="">
+            <select name="type" id="">
                 <option value="" selected disabled>Choissisez un type</option>
+                <?php
+                $reqType = $pdo->query('SELECT * FROM types');
+                $result = $reqType->fetchAll(PDO::FETCH_OBJ);
+                
+                foreach ($result as $type) { ?>
+                <option value="<?= $type->id ?>"><?= $type->name ?> </option>
+                <?php } ?>
+
+
+
             </select>
         </div>
         <button class="btn btn-primary">Enregistrer</button>
@@ -101,3 +150,7 @@ require __DIR__ . "/vendor/autoload.php";
 
 </body>
 </html>
+
+<?php
+
+// dd($_POST);
