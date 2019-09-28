@@ -89,7 +89,7 @@ function updatePerso($id, $stars, $pdo){
 <div class="w-100 mt-5">
     <?php
         $listePerso = $getAllPerso->fetchAll(PDO::FETCH_ASSOC);
-        dd($listePerso);
+        // dd($listePerso);
         foreach($listePerso as $item){?>
         
         <form action="" method="post">
