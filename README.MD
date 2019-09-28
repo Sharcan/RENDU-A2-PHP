@@ -1,3 +1,6 @@
+Author:
+Nicolas Brazzolotto A2DW2
+
 ## RENDU POUR LE COURS DE PHP A2 DW
 
 ##### Avant toutes chose, vous devez forker se repository, pour cela appuyer sur le boutton **fork** en haut de se reposity
