@@ -91,7 +91,7 @@ function updatePvPerso($id, $pv, $pdo)
 </head>
 <body>
 <nav class="nav mb-3">
-    <a href="./rendu.php" class="nav-link">Acceuil</a>
+    <a href="./rendu.php" class="nav-link">Accueil</a>
     <a href="./personnage.php" class="nav-link">Mes Personnages</a>
     <a href="./combat.php" class="nav-link">Combats</a>
 </nav>
